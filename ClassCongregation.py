@@ -91,7 +91,7 @@ class AgentHeader:  # 使用随机头类
             return "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.2117.157 Safari/537.36"  # 报错使用随机头
 
 
-class GetDatabaseFilePath:  # 数据库文件路径返回值
+class GetDatabaseFilePath:  # 主数据库文件路径返回值
     def result(self) -> str:
         if sys.platform == "win32" or sys.platform == "cygwin":
             DatabaseFilePath = GetRootFileLocation().Result() + "\\Medusa.db"
@@ -448,6 +448,7 @@ class ErrorLog:  # 报错写入日志
     def Write(self, Name, ErrorInfo):
         logging.info(Name)
         logging.warning(ErrorInfo)
+        logging.shutdown()#通过刷新和关闭所有处理程序来通知日志记录系统执行有序的关闭。
 
 
 class Dnslog:  # Dnslog判断
@@ -531,13 +532,19 @@ class randoms:  # 生成随机数
             salt += random.choice(H)
         return salt
     def LowercaseAndNumbers(self, nub: int) -> str:#生成小写和数字的值
-        H = "abcdefghijklmnopqrstuvwxyz0123456789"
+        H = "abcdefghijklmnopqrstuvwxyz123456789"
         salt = ""
         for i in range(nub):
             salt += random.choice(H)
         return salt
     def Numbers(self, nub: int) -> str:#生成小写和数字的值
         H = "0123456789"
+        salt = ""
+        for i in range(nub):
+            salt += random.choice(H)
+        return salt
+    def EnglishAlphabet(self, nub: int) -> str:#生成英文字母
+        H = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         salt = ""
         for i in range(nub):
             salt += random.choice(H)
@@ -773,21 +780,21 @@ class GetToolFilePath:  # 获取TOOL文件路径类
     def Result(self) -> str:
         system_type = sys.platform
         if system_type == "win32" or system_type == "cygwin":
-            ToolFileLocation = GetRootFileLocation().Result()+"\\Tool\\"
-            return ToolFileLocation
+            ToolFilePath = GetRootFileLocation().Result()+"\\Tool\\"
+            return ToolFilePath
         elif system_type == "linux" or system_type == "darwin":
-            ToolFileLocation = GetRootFileLocation().Result()+"/Tool/"
-            return ToolFileLocation
+            ToolFilePath = GetRootFileLocation().Result()+"/Tool/"
+            return ToolFilePath
 
 class GetTempFilePath:  # 获取Temp文件路径类
     def Result(self) -> str:
         system_type = sys.platform
         if system_type == "win32" or system_type == "cygwin":
-            TempFileLocation = GetRootFileLocation().Result()+"\\Temp\\"
-            return TempFileLocation
+            TempFilePath = GetRootFileLocation().Result()+"\\Temp\\"
+            return TempFilePath
         elif system_type == "linux" or system_type == "darwin":
-            TempFileLocation = GetRootFileLocation().Result()+"/Temp/"
-            return TempFileLocation
+            TempFilePath = GetRootFileLocation().Result()+"/Temp/"
+            return TempFilePath
 
 class ExecuteChildprocess:  # 执行子进程类
     def Execute(self, command: List[str]) -> None:
@@ -908,42 +915,51 @@ class GetImageFilePath:  # 获取Image文件路径类
     def Result(self) -> str:
         system_type = sys.platform
         if system_type == "win32" or system_type == "cygwin":
-            TempFileLocation = GetRootFileLocation().Result()+"\\Web\\Image\\"
-            return TempFileLocation
+            ImageFilePath = GetRootFileLocation().Result()+"\\Web\\Image\\"
+            return ImageFilePath
         elif system_type == "linux" or system_type == "darwin":
-            TempFileLocation = GetRootFileLocation().Result()+"/Web/Image/"
-            return TempFileLocation
+            ImageFilePath = GetRootFileLocation().Result()+"/Web/Image/"
+            return ImageFilePath
 
 class GetJavaScriptFilePath:  # 获取JavaScript文件路径类
     def Result(self) -> str:
         system_type = sys.platform
         if system_type == "win32" or system_type == "cygwin":
-            TempFileLocation = GetRootFileLocation().Result()+"\\Web\\CrossSiteScriptHub\\CrossSiteScriptProject\\"
-            return TempFileLocation
+            JavaScriptFilePath = GetRootFileLocation().Result()+"\\Web\\CrossSiteScriptHub\\CrossSiteScriptProject\\"
+            return JavaScriptFilePath
         elif system_type == "linux" or system_type == "darwin":
-            TempFileLocation = GetRootFileLocation().Result()+"/Web/CrossSiteScriptHub/CrossSiteScriptProject/"
-            return TempFileLocation
+            JavaScriptFilePath = GetRootFileLocation().Result()+"/Web/CrossSiteScriptHub/CrossSiteScriptProject/"
+            return JavaScriptFilePath
 
 class GetCrossSiteScriptTemplateFilePath:  # 获取CrossSiteScriptTemplate文件路径类
     def Result(self) -> str:
         system_type = sys.platform
         if system_type == "win32" or system_type == "cygwin":
-            TempFileLocation = GetRootFileLocation().Result()+"\\Web\\CrossSiteScriptHub\\CrossSiteScriptTemplate\\"
-            return TempFileLocation
+            CrossSiteScriptTemplateFilePath = GetRootFileLocation().Result()+"\\Web\\CrossSiteScriptHub\\CrossSiteScriptTemplate\\"
+            return CrossSiteScriptTemplateFilePath
         elif system_type == "linux" or system_type == "darwin":
-            TempFileLocation = GetRootFileLocation().Result()+"/Web/CrossSiteScriptHub/CrossSiteScriptTemplate/"
-            return TempFileLocation
+            CrossSiteScriptTemplateFilePath = GetRootFileLocation().Result()+"/Web/CrossSiteScriptHub/CrossSiteScriptTemplate/"
+            return CrossSiteScriptTemplateFilePath
 
 class GetAnalysisFileStoragePath:  # 获取分析文件存储路径类
     def Result(self) -> str:
         system_type = sys.platform
         if system_type == "win32" or system_type == "cygwin":
-            TempFileLocation = GetRootFileLocation().Result()+"\\Web\\ToolsUtility\\BinaryAnalysis\\AnalysisFileStorage\\"
-            return TempFileLocation
+            AnalysisFileStoragePath = GetRootFileLocation().Result()+"\\Web\\ToolsUtility\\BinaryAnalysis\\AnalysisFileStorage\\"
+            return AnalysisFileStoragePath
         elif system_type == "linux" or system_type == "darwin":
-            TempFileLocation = GetRootFileLocation().Result()+"/Web/ToolsUtility/BinaryAnalysis/AnalysisFileStorage/"
-            return TempFileLocation
+            AnalysisFileStoragePath = GetRootFileLocation().Result()+"/Web/ToolsUtility/BinaryAnalysis/AnalysisFileStorage/"
+            return AnalysisFileStoragePath
 
+class GetVirusFilePath:  # 获取生成好的病毒文件路径
+    def Result(self) -> str:
+        system_type = sys.platform
+        if system_type == "win32" or system_type == "cygwin":
+            VirusFilePath = GetRootFileLocation().Result()+"\\Web\\AntiAntiVirus\\VirusFile\\"
+            return VirusFilePath
+        elif system_type == "linux" or system_type == "darwin":
+            VirusFilePath = GetRootFileLocation().Result()+"/Web/AntiAntiVirus/VirusFile/"
+            return VirusFilePath
 
 def PortReplacement(Url,Prot):#替换URL里面的端口
     try:
@@ -951,3 +967,45 @@ def PortReplacement(Url,Prot):#替换URL里面的端口
         return Result
     except Exception as e:
         ErrorLog().Write("ClassCongregation_PortReplacement(def)", e)
+
+
+class GetNistDatabaseFilePath:  #  Nist数据库文件路径返回值
+    def result(self) -> str:
+        if sys.platform == "win32" or sys.platform == "cygwin":
+            NistDatabaseFilePath = GetRootFileLocation().Result() + "\\Nist.db"
+            return NistDatabaseFilePath
+        elif sys.platform == "linux" or sys.platform == "darwin":
+            NistDatabaseFilePath = GetRootFileLocation().Result() + "/Nist.db"
+            return NistDatabaseFilePath
+
+
+class BinaryDataTypeConversion:#对于原始二进制数据的类型转换
+    def BytesToString(self,BytesTypeBinaryData: bytes):  # 类型转换
+        try:
+            BinaryData = ""
+            for i in BytesTypeBinaryData:
+                # 如果是bytes类型的字符串，for循环会读取单个16进制然后转换成10进制
+                Data = hex(i)  # 转换会16进制
+                Data = Data.replace('0x', '')
+                if (len(Data) == 1):
+                    Data = '0' + Data  # 位数补全
+                BinaryData += '\\x' + Data
+
+            return eval(repr(BinaryData).replace('\\\\', '\\'))#先repr将字符串转为python原生字符串，然后替换双斜杠，最后eval转回正常字符串
+        except Exception as e:
+            ErrorLog().Write("ClassCongregation_BinaryDataTypeConversion(class)_BytesToString(def)", e)
+
+    def StringToBytes(self,StringTypeBinaryData: str):
+        try:
+            BinaryData = b""
+            for i in StringTypeBinaryData:
+                Code = hex(ord(i))
+                Code = bytes(Code.replace('0x', ''), encoding="utf-8")
+                if (len(Code) == 1):
+                    Code = b'0' + Code  # 位数补全
+                BinaryData += b'\\x' + Code
+
+            return eval(repr(BinaryData).replace('\\\\', '\\'))
+
+        except Exception as e:
+            ErrorLog().Write("ClassCongregation_BinaryDataTypeConversion(class)_StringToBytes(def)", e)

@@ -3,7 +3,7 @@
  <p align="center">
     <a href="https://github.com/Ascotbe/Medusa"><img alt="Release" src="https://img.shields.io/badge/Ascotbe-Medusa-green"></a>
     <a href="https://github.com/Ascotbe/Medusa"><img alt="Release" src="https://img.shields.io/badge/python-3.7+-blueviolet"></a>
-    <a href="https://github.com/Ascotbe/Medusa"><img alt="Release" src="https://img.shields.io/badge/Version-0.98-red"></a>
+    <a href="https://github.com/Ascotbe/Medusa"><img alt="Release" src="https://img.shields.io/badge/Version-1.0-red"></a>
     <a href="https://github.com/Ascotbe/Medusa"><img alt="Release" src="https://img.shields.io/badge/LICENSE-GPL-ff69b4"></a>
 	<a href="https://github.com/ascotbe/Medusa/stargazers"><img alt="Release" src="https://img.shields.io/github/stars/ascotbe/Medusa.svg"></a>
 	<a href="https://github.com/Ascotbe/Medusa"><img alt="Release" src="https://img.shields.io/badge/Plugin-200+-success"></a>
@@ -18,8 +18,6 @@
 >
 >项目开发人力不足，如果您发现问题或者有意见欢迎提相关的issue
 >
->`bash`版已上线
->
 >`Web`  **Alpha**版本已上线
 
 #### **中文文档 |[EnglishDocumentation](https://github.com/Ascotbe/Medusa/blob/master/README.md)**
@@ -30,19 +28,7 @@
 http://medusa.ascotbe.com
 ```
 
-### :mag_right:漏洞覆盖列表
-
-```
-http://medusa.ascotbe.com/Documentation/#/PluginDirectory
-```
-
-
-### :book:`Bash`版使用说明
-
-```bash
-http://medusa.ascotbe.com/Documentation/#/QuickStart/BashVersion
-```
-### :clipboard:`Web`版安装说明
+### :clipboard:安装说明
 
 ```bash
 http://medusa.ascotbe.com/Documentation/#/QuickStart/WebVersionInstallation
@@ -65,12 +51,6 @@ git clone https://gitee.com/asc0t6e/Medusa.git
 http://medusa.ascotbe.com/Documentation/#/UpDataLog
 ```
 
-### :open_file_folder:复现文档
-
-```
-https://www.ascotbe.com/Loophole
-```
-
 ### :green_heart:提交意见
 
 - 如果您有发现插件扫描不到对应的漏洞请提交[Bug]类的issue
@@ -88,6 +68,13 @@ https://www.ascotbe.com/Loophole
 - 如您在使用本项目的过程中存在任何非法行为，您需自行承担相应后果，我们将不承担任何法律及连带责任。
 - 在使用本项目前，请您**务必审慎阅读、充分理解各条款内容**，限制、免责条款或者其他涉及您重大权益的条款可能会以加粗、加下划线等形式提示您重点注意。 除非您已充分阅读、完全理解并接受本协议所有条款，否则，请您不要使用本项目。您的使用行为或者您以其他任何明示或者默示方式表示接受本协议的，即视为您已阅读并同意本协议的约束。
 
+### :dollar:赞助我们
+
+|              <font color=Blue>支付宝</font>              |             <font color=#008000>微信</font>              |
+| :------------------------------------------------------: | :------------------------------------------------------: |
+| <img style="zoom:33%;" src='Vue/src/assets/Alipay.jpeg'> | <img style="zoom:27%;" src='Vue/src/assets/WeChat.jpeg'> |
+
+<div><a href="http://medusa.ascotbe.com/Documentation/#/Reward"><p style="text-align: center;"><img src="Vue/src/assets/AbuotUsReward.gif" style="zoom:33%;float: center;"> 赞助列表</p></a></div>
 
 ### :palm_tree:贡献人员
 

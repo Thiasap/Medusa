@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-22 20:02:53
- * @LastEditTime: 2021-03-01 17:53:06
+ * @LastEditTime: 2021-04-15 01:49:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /undefined/Users/ascotbe/code/Medusa/docs/Documentation/config.js
@@ -94,6 +94,12 @@ let config = {
                 {
                     title: '验证码', path: '/API/VerificationCode'
                 },
+                {
+                    title: 'DNSLOG', path: '/API/DomainNameSystemLog'
+                },
+                {
+                    title: '免杀生成', path: '/API/AntiAntiVirus'
+                },
             ]
         },
 		{
@@ -102,18 +108,10 @@ let config = {
         {
             title: '更新日志', path: '/UpDataLog'
         },
-
         {
-            title: '其它', type: 'dropdown', items: [
-                {
-                    title: '开发团队介绍', path: '/Team'
-                },
-                {
-                    title: '问题列表', path: '/Bug'
-                },
-            ]
+            title: '赞助列表', path: '/Reward'
         }
     ],
-    tocVisibleDepth: 2,
+    tocVisibleDepth: 10,
     plugins: []
 };

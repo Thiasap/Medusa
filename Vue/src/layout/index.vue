@@ -12,7 +12,7 @@
           ref="layout_sider"
         >
           <div class="logo">
-            <img width="100%" height="100%" src="../assets/logo2.png" />
+            <img width="100%" height="100%" src="../assets/logo.png" />
           </div>
           <a-menu
             theme="dark"
@@ -81,7 +81,7 @@
 <script>
 import { Icon } from "ant-design-vue";
 const MyIcon = Icon.createFromIconfontCN({
-  scriptUrl: "//at.alicdn.com/t/font_1734998_0pb6qb17tw9f.js",
+  scriptUrl: "//at.alicdn.com/t/font_1734998_x30axu5phw.js",
 });
 import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
 import enUS from "ant-design-vue/lib/locale-provider/en_US";
@@ -132,6 +132,10 @@ export default {
           iconType: "icon-jiankong",
           msg: "监控页面",
           children: [
+            {
+              key: "nist_data_bulk_query",
+              msg: "CVE监控",
+            },
             {
               key: "gitHub",
               msg: "GitHub监控",
@@ -186,7 +190,17 @@ export default {
               msg: "杀毒软件进程查询接口",
             },
           ],
-        }
+        },
+        {
+          key: "domain_name_system_log",
+          iconType: "icon-DNSziyuan",
+          msg: "DNSLOG",
+        },
+        {
+          key: "about_us",
+          iconType: "icon-guanyuwomen1-02",
+          msg: "关于我们",
+        },
       ],
       top: 0.1,
       collapsed: false,
@@ -320,7 +334,7 @@ export default {
         color: #000;
         align-self: flex-start;
         padding-left: 15px;
-        padding-right: 25px;
+        padding-right: 10px;
 
         .user_name {
           margin-left: 10px;
@@ -338,10 +352,10 @@ export default {
       }
 
       .language {
-        width: 100px;
+        width: 80px;
         align-self: flex-end;
-        margin-right: 50px;
-        margin-left: 20px;
+        margin-right: 0px;
+        margin-left: 10px;
       }
     }
   }

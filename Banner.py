@@ -1,5 +1,5 @@
 import random
-Version = 'v0.96'
+Version = 'v1.0'
 Blog = """https://www.ascotbe.com"""
 red = '\033[25;31m'
 green = '\033[25;32m'

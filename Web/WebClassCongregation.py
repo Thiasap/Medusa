@@ -5,8 +5,8 @@ import sys
 import base64
 import sqlite3
 import json
-from ClassCongregation import GetDatabaseFilePath,ErrorLog,randoms,GetRootFileLocation
-
+from ClassCongregation import GetDatabaseFilePath,ErrorLog,randoms,GetRootFileLocation,GetNistDatabaseFilePath
+from config import domain_name_system_address
 
 class UserInfo:#用户表
     def __init__(self):
@@ -1661,7 +1661,7 @@ class ApplicationCollection:#存放收集到的应用所有数据
 
 class NistData:#存放Nist发布的CVE数据
     def __init__(self):
-        self.con = sqlite3.connect(GetDatabaseFilePath().result())
+        self.con = sqlite3.connect(GetNistDatabaseFilePath().result())
         # 获取所创建数据的游标
         self.cur = self.con.cursor()
         # 创建表
@@ -1822,27 +1822,181 @@ class NistData:#存放Nist发布的CVE数据
         except Exception as e:
             ErrorLog().Write("Web_WebClassCongregation_NistData(class)_ProductsQuery(def)", e)
             return None
-    # def Update(self, **kwargs) -> bool or None:  # 对数据进行更新
-    #     Uid = kwargs.get("uid")  # 用户id
-    #     Status = "1"#正在扫描还是已经完成
-    #     ApplicationData = kwargs.get("application_data")  # 获取的应用数据
-    #     RedisId = kwargs.get("redis_id")  # Redis值
-    #     RequestFailedApplicationName = kwargs.get("request_failed_application_name")  # 获取失败的应用名
-    #     TotalNumberOfApplications = kwargs.get("total_number_of_applications")  # 全部应用数
-    #     NumberOfFailures = kwargs.get("number_of_failures")  # 获取失败应用数
-    #     try:
-    #         self.cur.execute(
-    #             """UPDATE ApplicationCollection SET status = ?,application_data=?,request_failed_application_name=?,total_number_of_applications=?,number_of_failures=? WHERE redis_id = ? and uid=? """,
-    #             (Status, ApplicationData, RequestFailedApplicationName,TotalNumberOfApplications,NumberOfFailures,RedisId,Uid,))
-    #         # 提交
-    #         if self.cur.rowcount < 1:  # 用来判断是否更新成功
-    #             self.con.commit()
-    #             self.con.close()
-    #             return False
-    #         else:
-    #             self.con.commit()
-    #             self.con.close()
-    #             return True
-    #     except Exception as e:
-    #         ErrorLog().Write("Web_WebClassCongregation_NistData(class)_Update(def)", e)
-    #         return None
+    def Update(self, UpdateData) -> bool or None:  # 对数据进行更新
+
+        try:
+            self.cur.executemany(
+                """UPDATE CommonVulnerabilitiesAndExposures SET vulnerability_number = ?,v3_base_score=?,v3_base_severity=?,v2_base_score=?,v2_base_severity=?,last_up_date=?,vulnerability_description=?,vendors=?,products=?,raw_data=? WHERE vulnerability_number=? """,
+                UpdateData)
+            if self.cur.rowcount < 1:  # 用来判断是否更新成功
+                self.con.commit()
+                return False
+            else:
+                self.con.commit()
+                return True
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_NistData(class)_Update(def)", e)
+            return False
+    def UniqueInquiry(self, **kwargs) -> bool or None:  # 对更新的数据进行检查，判断数据库中是否是唯一的
+        try:
+            VulnerabilityNumber=kwargs.get("vulnerability_number")
+            self.cur.execute("select vulnerability_number  from CommonVulnerabilitiesAndExposures where vulnerability_number=?", (VulnerabilityNumber,))
+            if self.cur.fetchall():  # 判断是否有数据
+                return True
+            else:
+                return False
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_NistData(class)_UniqueInquiry(def)", e)
+            return None
+
+
+class DomainNameSystemLog:  # 存放DNSLOG数据
+    def __init__(self):
+        self.con = sqlite3.connect(GetDatabaseFilePath().result())
+        # 获取所创建数据的游标
+        self.cur = self.con.cursor()
+        # 创建表
+        try:
+            self.cur.execute("CREATE TABLE DomainNameSystemLog\
+                                (dnslog_id INTEGER PRIMARY KEY,\
+                                domain_name TEXT NOT NULL,\
+                                ip TEXT NOT NULL,\
+                                creation_time TEXT NOT NULL)")
+
+
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_DomainNameSystemLog(class)_init(def)", e)
+
+    def Write(self,**kwargs) -> bool or None:  # 写入相关信息
+        CreationTime = str(int(time.time()))  # 创建时间
+        Ip = kwargs.get("ip")  # 请求IP不一定准确
+        DomainName = kwargs.get("domain_name")  # 获取解析域名
+        try:
+            DomainNameSystemAddressLength=len("."+domain_name_system_address)#获取长度，加点是为了截断域名
+            TreatmentDomainName=DomainName[-DomainNameSystemAddressLength:]#进行截断处理
+            if TreatmentDomainName=="."+domain_name_system_address:
+                try:
+                    self.cur.execute("INSERT INTO DomainNameSystemLog(domain_name,ip,creation_time)\
+                        VALUES (?,?,?)",(DomainName,Ip,CreationTime,))
+                    # 提交
+                    self.con.commit()  # 只发送数据不结束
+                    self.con.close()
+                    return True
+                except Exception as e:
+                    ErrorLog().Write("Web_WebClassCongregation_DomainNameSystemLog(class)_Write(def)", e)
+                    return False
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_DomainNameSystemLog(class)_Write(def)-TreatmentDomainName", e)
+            return None
+    def Query(self, **kwargs):  #用来查询数据
+        try:
+            NumberOfSinglePages=100#单页数量
+            NumberOfPages=kwargs.get("number_of_pages")-1#查询第几页，需要对页码进行-1操作，比如第1页的话查询语句是limit 100 offset 0，而不是limit 100 offset 100，所以还需要判断传入的数据大于0
+            self.cur.execute("select domain_name,ip,creation_time  from DomainNameSystemLog limit ? offset ?", (NumberOfSinglePages,NumberOfPages*NumberOfSinglePages,))#查询相关信息
+            result_list = []
+            for i in self.cur.fetchall():
+                JsonValues = {}
+                JsonValues["domain_name"] = i[0]
+                JsonValues["ip"] = i[1]
+                JsonValues["creation_time"] = i[2]
+                result_list.append(JsonValues)
+            self.con.close()
+            return result_list
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_DomainNameSystemLog(class)_Query(def)", e)
+            return None
+    def StatisticalData(self):  # 整体个数统计
+        try:
+            self.cur.execute("SELECT COUNT(1)  FROM DomainNameSystemLog",)  # 查询用户相关信息
+            Result=self.cur.fetchall()[0][0]#获取数据个数
+            self.con.close()
+            return Result
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_DomainNameSystemLog(class)_StatisticalData(def)", e)
+            return None
+
+class AntiAntiVirusData:#免杀病毒相关数据库
+    def __init__(self):
+        self.con = sqlite3.connect(GetDatabaseFilePath().result())
+        # 获取所创建数据的游标
+        self.cur = self.con.cursor()
+        # 创建表
+        try:
+            self.cur.execute("CREATE TABLE AntiAntiVirus\
+                                (anti_anti_virus_id INTEGER PRIMARY KEY,\
+                                uid TEXT NOT NULL,\
+                                shellcode_type TEXT NOT NULL,\
+                                virus_original_file_name TEXT NOT NULL,\
+                                virus_generate_file_name TEXT NOT NULL,\
+                                compilation_status TEXT NOT NULL,\
+                                redis_id TEXT NOT NULL,\
+                                creation_time TEXT NOT NULL)")
+
+
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_AntiAntiVirusData(class)_init(def)", e)
+    def Write(self, **kwargs) -> bool or None:  # 写入相关信息
+        Uid = kwargs.get("uid")
+        VirusOriginalFileName=kwargs.get("virus_original_file_name")
+        ShellcodeType = kwargs.get("shellcode_type")#1为MSF类型的，2为CS类型的
+        VirusGenerateFileName = kwargs.get("virus_generate_file_name")
+        CompilationStatus = kwargs.get("compilation_status")#状态0为未完成，1完成，-1出错
+        RedisId = kwargs.get("redis_id")
+        CreationTime = str(int(time.time()))  # 创建时间
+        try:
+            self.cur.execute("INSERT INTO AntiAntiVirus(uid,shellcode_type,virus_original_file_name,virus_generate_file_name,compilation_status,redis_id,creation_time)\
+                VALUES (?,?,?,?,?,?,?)", (Uid,ShellcodeType,VirusOriginalFileName, VirusGenerateFileName,CompilationStatus,RedisId, CreationTime,))
+            self.con.commit()  # 只发送数据不结束
+            self.con.close()
+            return True
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_AntiAntiVirusData(class)_Write(def)", e)
+            return False
+    def StatisticalData(self,**kwargs):  # 当前用户个数统计
+        Uid = kwargs.get("uid")
+        try:
+            self.cur.execute("SELECT COUNT(1)  FROM AntiAntiVirus WHERE uid=?",(Uid,))
+            Result=self.cur.fetchall()[0][0]#获取数据个数
+            self.con.close()
+            return Result
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_AntiAntiVirusData(class)_StatisticalData(def)", e)
+            return None
+    def UpdateStatus(self,**kwargs)->bool:#利用主键ID来判断后更新数据
+        RedisId = kwargs.get("redis_id")
+        CompilationStatus = kwargs.get("compilation_status")
+        try:
+            self.cur.execute("""UPDATE AntiAntiVirus SET compilation_status = ? WHERE redis_id= ?""",(CompilationStatus, RedisId,))
+            # 提交
+            if self.cur.rowcount < 1:  # 用来判断是否更新成功
+                self.con.commit()
+                self.con.close()
+                return False
+            else:
+                self.con.commit()
+                self.con.close()
+                return True
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_ActiveScanList(class)_UpdateStatus(def)", e)
+            return False
+    def Query(self, **kwargs):  #用来查询数据
+        try:
+            Uid = kwargs.get("uid")
+            NumberOfSinglePages=100#单页数量
+            NumberOfPages=kwargs.get("number_of_pages")-1#查询第几页，需要对页码进行-1操作，比如第1页的话查询语句是limit 100 offset 0，而不是limit 100 offset 100，所以还需要判断传入的数据大于0
+            self.cur.execute("select * from AntiAntiVirus WHERE uid=? limit ? offset ? ", (Uid,NumberOfSinglePages,NumberOfPages*NumberOfSinglePages,))#查询相关信息
+            result_list = []
+            for i in self.cur.fetchall():
+                JsonValues = {}
+                JsonValues["shellcode_type"] = i[2]
+                JsonValues["virus_original_file_name"] = i[3]
+                JsonValues["virus_generate_file_name"] = i[4]
+                JsonValues["compilation_status"] = i[5]
+                JsonValues["creation_time"] = i[7]
+
+                result_list.append(JsonValues)
+            self.con.close()
+            return result_list
+        except Exception as e:
+            ErrorLog().Write("Web_WebClassCongregation_ActiveScanList(class)_Query(def)", e)
+            return None

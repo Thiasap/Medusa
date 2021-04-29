@@ -31,6 +31,12 @@ import dataComparison from '../layout/combine/combineList/markdownData/dataCompa
 import createCombine from '../layout/combine/createCombine/createCombine.vue'
 
 import antivirusSoftwareCompared from '../layout/toolbar/antivirusSoftwareCompared/antivirusSoftwareCompared.vue'
+
+import AboutUs from '../layout/AboutUs/AboutUs.vue'
+import DomainNameSystemLog from '../layout/DomainNameSystemLog/DNSLog.vue'
+
+import CommonVulnerabilitiesAndExposures from '../layout/CommonVulnerabilitiesAndExposuresMonitor/CommonVulnerabilitiesAndExposures.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -271,9 +277,38 @@ const routes = [
           activeIndex: "antivirusSoftwareCompared",
           defaultOpenKeys: "sub6"
         },
-      },
 
-      
+      },
+      {
+        path: 'about_us',
+        component: AboutUs,
+        name: 'about_us',
+        meta: {
+          keepAlive: true,
+          activeIndex: "about_us",
+        },
+
+      },
+      {
+        path: 'domain_name_system_log',
+        component: DomainNameSystemLog,
+        name: 'domain_name_system_log',
+        meta: {
+          keepAlive: true,
+          activeIndex: "domain_name_system_log",
+        },
+
+      },
+      {
+        path: 'nist_data_bulk_query',
+        component: CommonVulnerabilitiesAndExposures,
+        name: 'nist_data_bulk_query',
+        meta: {
+          keepAlive: true,
+          activeIndex: "nist_data",
+          defaultOpenKeys: "sub3"
+        },
+      },
 
     ]
   },

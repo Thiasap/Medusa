@@ -32,7 +32,7 @@ export const URL_POST_MODIFY_CROSS_SITE_SCRIPT_PROJECT = `/modify_cross_site_scr
 export const URL_POST_READ_SCRIPT_TEMPLATE = `/read_cross_site_script_template/`// 读取用户自定义跨站脚本模板数据
 export const URL_POST_READ_DEFAULT_SCRIPT_TEMPLATE = `/read_default_cross_site_script_template/`// 读取默认跨站脚本模板数据
 export const URL_POST_SAVE_CROSS_SITE_SCRIPT_TEMPLATE = `/save_cross_site_script_template/`// 保存用户自定义跨站脚本模板数据
-export const URL_POST_MODIFY_CROSS_SITE_SCRIPT_TEMPLATE = `/modify_cross_site_script_template/`// 修改用户自定义跨站脚本模板数据 
+export const URL_POST_MODIFY_CROSS_SITE_SCRIPT_TEMPLATE = `/modify_cross_site_script_template/`// 修改用户自定义跨站脚本模板数据
 
 export const URL_POST_HARDWARE_INITIALIZATION = `/system_hardware_initialization/`// 获取当前机器基础信息
 export const URL_POST_HARDWARE_USAGE_QUERY = `/system_hardware_usage_query/`// 获取当前机器CPU和内存使用率
@@ -47,11 +47,14 @@ export const URL_POST_SAVE_MARKDOWN_DATA = `/save_markdown_data/`//保存Markdow
 export const URL_POST_MARKDOWN_IMAGE_UPLOAD = `/markdown_image_upload/`//上传Markdown图片
 export const URL_POST_MARKDOWN_DATA_COMPARISON = `/markdown_data_comparison/`//Markdown文档数据对比
 export const URL_POST_JOIN_MARKDOWN_PROJECT = `/join_markdown_project/`//加入协同作战项目
-
-
-
-// API/api/upload_avatar/
-
+export const URL_POST_DOMAIN_NAME_SYSTEM_LOG = `/domain_name_system_log/`//DNSLOG数据查询
+export const URL_POST_DOMAIN_NAME_SYSTEM_LOG_STATISTICS = `/domain_name_system_log_statistics/`//DNSLOG数据查询个数统计
+export const URL_POST_NIST_DATA_BULK_QUERY = `/nist_data_bulk_query/`//CVE监控首页精简数据查询
+export const URL_POST_NIST_DATA_DETAILED_QUERY = `/nist_data_detailed_query/`//获取单个详细的CVE编号
+export const URL_POST_NIST_STATISTICS = `/nist_statistics/`//获取CVE编号数据个数
+export const URL_POST_NIST_SEVERITY_FILTER = `/nist_severity_filter/`//严重性等级筛选
+export const URL_POST_NIST_VENDORS_FILTER = `/nist_vendors_filter/`//厂商名称筛选查询
+export const URL_POST_NIST_PRODUCTS_FILTER = `/nist_products_filter/`//产品名称筛选查询
 
 
 // /api/vulnerability_scanning/
